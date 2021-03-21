@@ -162,6 +162,7 @@ public class ConstantFolder
 		optimization(cgen);
 		displayInfo("Integer Constant Pool after:",0);
 		displayPool(cgen,cpgen);
+		gen.setConstantPool(cpgen);
 		this.optimized = gen.getJavaClass();
 	}
 
