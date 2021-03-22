@@ -1,0 +1,378 @@
+     [java] *******comp0012.target.DynamicVariableFolding*********
+     [java] Number Constant Pool before:
+     [java] 2) CONSTANT_Integer[3](bytes = 54321)
+     [java] 5) CONSTANT_Integer[3](bytes = 534245)
+     [java] 6) CONSTANT_Integer[3](bytes = 120298345)
+     [java] 7) CONSTANT_Double[6](bytes = 38.435792873)
+     [java]
+     [java]
+     [java] Debugging method <init>
+     [java] Instructions before:
+     [java]    0: aload_0[42](1)
+     [java]    1: invokespecial[183](3) 1
+     [java]    4: return[177](1)
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: aload_0[42](1)
+     [java]    1: invokespecial[183](3) 1
+     [java]    4: return[177](1)
+     [java]
+     [java]
+     [java] Debugging method methodOne
+     [java] Instructions before:
+     [java]    0: bipush[16](2) 42
+     [java]    2: istore_1[60](1)
+     [java]    3: iload_1[27](1)
+     [java]    4: sipush[17](3) 764
+     [java]    7: iadd[96](1)
+     [java]    8: iconst_3[6](1)
+     [java]    9: imul[104](1)
+     [java]   10: istore_2[61](1)
+     [java]   11: iload_2[28](1)
+     [java]   12: bipush[16](2) 67
+     [java]   14: isub[100](1)
+     [java]   15: istore_1[60](1)
+     [java]   16: iload_2[28](1)
+     [java]   17: sipush[17](3) 1234
+     [java]   20: iadd[96](1)
+     [java]   21: iload_1[27](1)
+     [java]   22: isub[100](1)
+     [java]   23: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     sipush[17](3) 764
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 45
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     bipush[16](2) 67
+     [java]     isub[100](1)
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     sipush[17](3) 1234
+     [java]     iadd[96](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 45
+     [java]     iconst_3[6](1)
+     [java]     imul[104](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 46
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     bipush[16](2) 67
+     [java]     isub[100](1)
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     sipush[17](3) 1234
+     [java]     iadd[96](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     bipush[16](2) 67
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 47
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     sipush[17](3) 1234
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 48
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 48
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 49
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: bipush[16](2) 42
+     [java]    2: istore_1[60](1)
+     [java]    3: ldc[18](2) 46
+     [java]   10: istore_2[61](1)
+     [java]   11: ldc[18](2) 47
+     [java]   15: istore_1[60](1)
+     [java]   16: ldc[18](2) 49
+     [java]   23: ireturn[172](1)
+     [java]
+     [java]
+     [java] Debugging method methodTwo
+     [java] Instructions before:
+     [java]    0: sipush[17](3) 12345
+     [java]    3: istore_1[60](1)
+     [java]    4: ldc[18](2) 2
+     [java]    6: istore_2[61](1)
+     [java]    7: getstatic[178](3) 3
+     [java]   10: iload_1[27](1)
+     [java]   11: iload_2[28](1)
+     [java]   12: if_icmpge[162](3) -> iconst_0
+     [java]   15: iconst_1[4](1)
+     [java]   16: goto[167](3) -> invokevirtual 4
+     [java]   19: iconst_0[3](1)
+     [java]   20: invokevirtual[182](3) 4
+     [java]   23: iconst_0[3](1)
+     [java]   24: istore_2[61](1)
+     [java]   25: iload_1[27](1)
+     [java]   26: iload_2[28](1)
+     [java]   27: if_icmple[164](3) -> iconst_0
+     [java]   30: iconst_1[4](1)
+     [java]   31: goto[167](3) -> ireturn
+     [java]   34: iconst_0[3](1)
+     [java]   35: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: sipush[17](3) 12345
+     [java]    3: istore_1[60](1)
+     [java]    4: ldc[18](2) 2
+     [java]    6: istore_2[61](1)
+     [java]    7: getstatic[178](3) 3
+     [java]   10: iload_1[27](1)
+     [java]   11: iload_2[28](1)
+     [java]   12: if_icmpge[162](3) -> iconst_0
+     [java]   15: iconst_1[4](1)
+     [java]   16: goto[167](3) -> invokevirtual 4
+     [java]   19: iconst_0[3](1)
+     [java]   20: invokevirtual[182](3) 4
+     [java]   23: iconst_0[3](1)
+     [java]   24: istore_2[61](1)
+     [java]   25: iload_1[27](1)
+     [java]   26: iload_2[28](1)
+     [java]   27: if_icmple[164](3) -> iconst_0
+     [java]   30: iconst_1[4](1)
+     [java]   31: goto[167](3) -> ireturn
+     [java]   34: iconst_0[3](1)
+     [java]   35: ireturn[172](1)
+     [java]
+     [java]
+     [java] Debugging method methodThree
+     [java] Instructions before:
+     [java]    0: iconst_0[3](1)
+     [java]    1: istore_1[60](1)
+     [java]    2: iload_1[27](1)
+     [java]    3: iconst_3[6](1)
+     [java]    4: iadd[96](1)
+     [java]    5: istore_2[61](1)
+     [java]    6: iload_2[28](1)
+     [java]    7: iconst_4[7](1)
+     [java]    8: iadd[96](1)
+     [java]    9: istore_1[60](1)
+     [java]   10: iload_1[27](1)
+     [java]   11: iconst_5[8](1)
+     [java]   12: iadd[96](1)
+     [java]   13: istore_2[61](1)
+     [java]   14: iload_1[27](1)
+     [java]   15: iload_2[28](1)
+     [java]   16: imul[104](1)
+     [java]   17: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iconst_3[6](1)
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 50
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     iconst_4[7](1)
+     [java]     iadd[96](1)
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iconst_5[8](1)
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 51
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iload_2[28](1)
+     [java]     imul[104](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     iconst_4[7](1)
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 52
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iload_2[28](1)
+     [java]     imul[104](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 53
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: iconst_0[3](1)
+     [java]    1: istore_1[60](1)
+     [java]    2: ldc[18](2) 50
+     [java]    5: istore_2[61](1)
+     [java]    6: ldc[18](2) 52
+     [java]    9: istore_1[60](1)
+     [java]   10: ldc[18](2) 51
+     [java]   13: istore_2[61](1)
+     [java]   14: ldc[18](2) 53
+     [java]   17: ireturn[172](1)
+     [java]
+     [java]
+     [java] Debugging method methodFour
+     [java] Instructions before:
+     [java]    0: ldc[18](2) 5
+     [java]    2: istore_1[60](1)
+     [java]    3: iload_1[27](1)
+     [java]    4: sipush[17](3) 1234
+     [java]    7: isub[100](1)
+     [java]    8: istore_2[61](1)
+     [java]    9: getstatic[178](3) 3
+     [java]   12: ldc[18](2) 6
+     [java]   14: iload_1[27](1)
+     [java]   15: isub[100](1)
+     [java]   16: i2d[135](1)
+     [java]   17: ldc2_w[20](3) 7
+     [java]   20: dmul[107](1)
+     [java]   21: invokevirtual[182](3) 9
+     [java]   24: iconst_0[3](1)
+     [java]   25: istore_3[62](1)
+     [java]   26: iload_3[29](1)
+     [java]   27: bipush[16](2) 10
+     [java]   29: if_icmpge[162](3) -> iconst_4
+     [java]   32: getstatic[178](3) 3
+     [java]   35: iload_2[28](1)
+     [java]   36: iload_1[27](1)
+     [java]   37: isub[100](1)
+     [java]   38: iload_3[29](1)
+     [java]   39: imul[104](1)
+     [java]   40: invokevirtual[182](3) 10
+     [java]   43: iinc[132](3) 3 1
+     [java]   46: goto[167](3) -> iload_3
+     [java]   49: iconst_4[7](1)
+     [java]   50: istore_1[60](1)
+     [java]   51: iload_1[27](1)
+     [java]   52: iconst_2[5](1)
+     [java]   53: iadd[96](1)
+     [java]   54: istore_2[61](1)
+     [java]   55: iload_1[27](1)
+     [java]   56: iload_2[28](1)
+     [java]   57: imul[104](1)
+     [java]   58: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     sipush[17](3) 1234
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 54
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 6
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 55
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iconst_2[5](1)
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 56
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iload_2[28](1)
+     [java]     imul[104](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 57
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     iload_2[28](1)
+     [java]     imul[104](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 58
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 57
+     [java]     iload_3[29](1)
+     [java]     imul[104](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 53
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: ldc[18](2) 5
+     [java]    2: istore_1[60](1)
+     [java]    3: ldc[18](2) 54
+     [java]    8: istore_2[61](1)
+     [java]    9: getstatic[178](3) 3
+     [java]   12: ldc[18](2) 55
+     [java]   16: i2d[135](1)
+     [java]   17: ldc2_w[20](3) 7
+     [java]   20: dmul[107](1)
+     [java]   21: invokevirtual[182](3) 9
+     [java]   24: iconst_0[3](1)
+     [java]   25: istore_3[62](1)
+     [java]   26: iload_3[29](1)
+     [java]   27: bipush[16](2) 10
+     [java]   29: if_icmpge[162](3) -> iconst_4
+     [java]   32: getstatic[178](3) 3
+     [java]   35: ldc[18](2) 53
+     [java]   40: invokevirtual[182](3) 10
+     [java]   43: iinc[132](3) 3 1
+     [java]   46: goto[167](3) -> iload_3
+     [java]   49: iconst_4[7](1)
+     [java]   50: istore_1[60](1)
+     [java]   51: ldc[18](2) 56
+     [java]   54: istore_2[61](1)
+     [java]   55: ldc[18](2) 58
+     [java]   58: ireturn[172](1)
+     [java]
+     [java] Number Constant Pool after:
+     [java] 2) CONSTANT_Integer[3](bytes = 54321)
+     [java] 5) CONSTANT_Integer[3](bytes = 534245)
+     [java] 6) CONSTANT_Integer[3](bytes = 120298345)
+     [java] 7) CONSTANT_Double[6](bytes = 38.435792873)
+     [java] 45) CONSTANT_Integer[3](bytes = 806)
+     [java] 46) CONSTANT_Integer[3](bytes = 2418)
+     [java] 47) CONSTANT_Integer[3](bytes = 2351)
+     [java] 48) CONSTANT_Integer[3](bytes = 3652)
+     [java] 49) CONSTANT_Integer[3](bytes = 1301)
+     [java] 50) CONSTANT_Integer[3](bytes = 3)
+     [java] 51) CONSTANT_Integer[3](bytes = 5)
+     [java] 52) CONSTANT_Integer[3](bytes = 9)
+     [java] 53) CONSTANT_Integer[3](bytes = 0)
+     [java] 54) CONSTANT_Integer[3](bytes = -1230)
+     [java] 55) CONSTANT_Integer[3](bytes = 120298341)
+     [java] 56) CONSTANT_Integer[3](bytes = 6)
+     [java] 57) CONSTANT_Integer[3](bytes = 2)
+     [java] 58) CONSTANT_Integer[3](bytes = 24)
+     [java]

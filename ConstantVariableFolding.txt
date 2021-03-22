@@ -1,0 +1,207 @@
+     [java] *******comp0012.target.ConstantVariableFolding*********
+     [java] Number Constant Pool before:
+     [java] 2) CONSTANT_Double[6](bytes = 0.67)
+     [java] 4) CONSTANT_Integer[3](bytes = 54321)
+     [java] 5) CONSTANT_Long[5](bytes = 4835783423)
+     [java] 7) CONSTANT_Long[5](bytes = 400000)
+     [java]
+     [java]
+     [java] Debugging method <init>
+     [java] Instructions before:
+     [java]    0: aload_0[42](1)
+     [java]    1: invokespecial[183](3) 1
+     [java]    4: return[177](1)
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: aload_0[42](1)
+     [java]    1: invokespecial[183](3) 1
+     [java]    4: return[177](1)
+     [java]
+     [java]
+     [java] Debugging method methodOne
+     [java] Instructions before:
+     [java]    0: bipush[16](2) 62
+     [java]    2: istore_1[60](1)
+     [java]    3: iload_1[27](1)
+     [java]    4: sipush[17](3) 764
+     [java]    7: iadd[96](1)
+     [java]    8: iconst_3[6](1)
+     [java]    9: imul[104](1)
+     [java]   10: istore_2[61](1)
+     [java]   11: iload_2[28](1)
+     [java]   12: sipush[17](3) 1234
+     [java]   15: iadd[96](1)
+     [java]   16: iload_1[27](1)
+     [java]   17: isub[100](1)
+     [java]   18: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     sipush[17](3) 764
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 28
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     sipush[17](3) 1234
+     [java]     iadd[96](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 28
+     [java]     iconst_3[6](1)
+     [java]     imul[104](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 29
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     sipush[17](3) 1234
+     [java]     iadd[96](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     sipush[17](3) 1234
+     [java]     iadd[96](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 30
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 30
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 31
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: bipush[16](2) 62
+     [java]    2: istore_1[60](1)
+     [java]    3: ldc[18](2) 29
+     [java]   10: istore_2[61](1)
+     [java]   11: ldc[18](2) 31
+     [java]   18: ireturn[172](1)
+     [java]
+     [java]
+     [java] Debugging method methodTwo
+     [java] Instructions before:
+     [java]    0: ldc2_w[20](3) 2
+     [java]    3: dstore_1[72](1)
+     [java]    4: iconst_1[4](1)
+     [java]    5: istore_3[62](1)
+     [java]    6: dload_1[39](1)
+     [java]    7: iload_3[29](1)
+     [java]    8: i2d[135](1)
+     [java]    9: dadd[99](1)
+     [java]   10: dreturn[175](1)
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: ldc2_w[20](3) 2
+     [java]    3: dstore_1[72](1)
+     [java]    4: iconst_1[4](1)
+     [java]    5: istore_3[62](1)
+     [java]    6: dload_1[39](1)
+     [java]    7: iload_3[29](1)
+     [java]    8: i2d[135](1)
+     [java]    9: dadd[99](1)
+     [java]   10: dreturn[175](1)
+     [java]
+     [java]
+     [java] Debugging method methodThree
+     [java] Instructions before:
+     [java]    0: sipush[17](3) 12345
+     [java]    3: istore_1[60](1)
+     [java]    4: ldc[18](2) 4
+     [java]    6: istore_2[61](1)
+     [java]    7: iload_1[27](1)
+     [java]    8: iload_2[28](1)
+     [java]    9: if_icmple[164](3) -> iconst_0
+     [java]   12: iconst_1[4](1)
+     [java]   13: goto[167](3) -> ireturn
+     [java]   16: iconst_0[3](1)
+     [java]   17: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: sipush[17](3) 12345
+     [java]    3: istore_1[60](1)
+     [java]    4: ldc[18](2) 4
+     [java]    6: istore_2[61](1)
+     [java]    7: iload_1[27](1)
+     [java]    8: iload_2[28](1)
+     [java]    9: if_icmple[164](3) -> iconst_0
+     [java]   12: iconst_1[4](1)
+     [java]   13: goto[167](3) -> ireturn
+     [java]   16: iconst_0[3](1)
+     [java]   17: ireturn[172](1)
+     [java]
+     [java]
+     [java] Debugging method methodFour
+     [java] Instructions before:
+     [java]    0: ldc2_w[20](3) 5
+     [java]    3: lstore_1[64](1)
+     [java]    4: ldc2_w[20](3) 7
+     [java]    7: lstore_3[66](1)
+     [java]    8: lload_1[31](1)
+     [java]    9: lload_3[33](1)
+     [java]   10: ladd[97](1)
+     [java]   11: lstore[55](2) 5
+     [java]   13: lload_1[31](1)
+     [java]   14: lload_3[33](1)
+     [java]   15: lcmp[148](1)
+     [java]   16: ifle[158](3) -> iconst_0
+     [java]   19: iconst_1[4](1)
+     [java]   20: goto[167](3) -> ireturn
+     [java]   23: iconst_0[3](1)
+     [java]   24: ireturn[172](1)
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     lload_1[31](1)
+     [java]     lload_3[33](1)
+     [java]     ladd[97](1)
+     [java]   New instruction segment:
+     [java]     ldc2_w[20](3) 32
+     [java]
+     [java] Folding binary operation:
+     [java]
+     [java]
+     [java] Instructions after
+     [java]    0: ldc2_w[20](3) 5
+     [java]    3: lstore_1[64](1)
+     [java]    4: ldc2_w[20](3) 7
+     [java]    7: lstore_3[66](1)
+     [java]    8: ldc2_w[20](3) 32
+     [java]   11: lstore[55](2) 5
+     [java]   13: lload_1[31](1)
+     [java]   14: lload_3[33](1)
+     [java]   15: lcmp[148](1)
+     [java]   16: ifle[158](3) -> iconst_0
+     [java]   19: iconst_1[4](1)
+     [java]   20: goto[167](3) -> ireturn
+     [java]   23: iconst_0[3](1)
+     [java]   24: ireturn[172](1)
+     [java]
+     [java] Number Constant Pool after:
+     [java] 2) CONSTANT_Double[6](bytes = 0.67)
+     [java] 4) CONSTANT_Integer[3](bytes = 54321)
+     [java] 5) CONSTANT_Long[5](bytes = 4835783423)
+     [java] 7) CONSTANT_Long[5](bytes = 400000)
+     [java] 28) CONSTANT_Integer[3](bytes = 826)
+     [java] 29) CONSTANT_Integer[3](bytes = 2478)
+     [java] 30) CONSTANT_Integer[3](bytes = 3712)
+     [java] 31) CONSTANT_Integer[3](bytes = 3650)
+     [java] 32) CONSTANT_Long[5](bytes = 4836183423)
+     [java]

@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.*;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Code;
@@ -16,8 +16,41 @@ import org.apache.bcel.util.InstructionFinder;
 
 
 
+
+
+
+
+
 public class ConstantFolder
 {
+	public static class VariableTable{
+		private HashMap<Integer, Number> variableMap;
+		public VariableTable(){
+			variableMap = new HashMap<>();
+		}
+
+		public boolean hasPos(int storePos){
+			return variableMap.containsKey(storePos);
+		}
+
+		public void setVar(int storePos, Number value){
+			variableMap.put(storePos,value);
+		}
+
+		public Number getValue(int storePos){
+			return variableMap.get(storePos);
+		}
+
+
+	}
+
+	public static class Variables{
+		public Variables(){
+
+		}
+	}
+
+
 	ClassParser parser = null;
 	ClassGen gen = null;
 
@@ -52,6 +85,7 @@ public class ConstantFolder
 		{
 			if (constants[i] instanceof ConstantInteger || constants[i] instanceof ConstantDouble || constants[i] instanceof ConstantLong || constants[i] instanceof ConstantFloat)
 			{
+				System.out.printf("%d) ",i);
 				System.out.println(constants[i]);
 			}
 		}
@@ -69,23 +103,39 @@ public class ConstantFolder
 		System.out.println((new String(new char[indent]).replace("\0", " ")) + Content);
 	}
 
-	public Number getPushedNumber(InstructionHandle instruction,ConstantPoolGen cpgen){
-		//Currently gets value for ldc instructions only
-		LDC loadInstruction = (LDC)instruction.getInstruction();
-		Object value = loadInstruction.getValue(cpgen);
+	public Number getPushedNumber(InstructionHandle instructionHandler,ConstantPoolGen cpgen, VariableTable variableTable){
+		//Gets the value that is being pushed from constant pool
+		Object value = null;
+		Instruction instruction = instructionHandler.getInstruction();
+		if (instruction instanceof LDC){
+			LDC loadInstruction = (LDC)instruction;
+			value = loadInstruction.getValue(cpgen);
+		}else if (instruction instanceof LDC2_W){
+			LDC2_W loadInstruction = (LDC2_W)instruction;
+			value = loadInstruction.getValue(cpgen);
+		}else if (instruction instanceof LoadInstruction){
+			LoadInstruction loadInstruction = (LoadInstruction) instruction;
+			//Get value of local variable stored at the index referenced by Loadinstruction
+			value = variableTable.getValue(loadInstruction.getIndex());
+		}else if (instruction instanceof ConstantPushInstruction){
+			ConstantPushInstruction loadInstruction = (ConstantPushInstruction) instruction;
+			value = loadInstruction.getValue();
+		}
 		return (Number)value;
 	}
 
 	enum binOps{
-		IADD,FADD;
+		//Enum for binary operations, used to achieve switch case
+		IADD,FADD,DADD,LADD,ISUB,FSUB,DSUB,LSUB,IDIV,FDIV,DDIV,LDIV,IMUL,FMUL,DMUL,LMUL;
 	}
 
-	public boolean binaryOpFold(InstructionList il, ConstantPoolGen cpgen){
+	public boolean binaryOpFold(InstructionList il, ConstantPoolGen cpgen,VariableTable variableTable){
 		boolean changed = false;
-		System.out.println("Folding binary operation:");
+
 		InstructionFinder itf = new InstructionFinder(il);
 		//Search through InstructionList for pattern: load load followed by an arithmetic instruction
-		Iterator iter = itf.search("ldc ldc ArithmeticInstruction");
+		//Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
+		Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
 		while (iter.hasNext()){
 			//Iterator return InstructionHandle
 			InstructionHandle[] instructions = (InstructionHandle[])iter.next();
@@ -94,14 +144,68 @@ public class ConstantFolder
 				displayInfo(a.getInstruction().toString(),4);
 			}
 			Number[] operands = new Number[2];
-			operands[0] = getPushedNumber(instructions[0],cpgen);
-			operands[1] = getPushedNumber(instructions[1],cpgen);
+			operands[0] = getPushedNumber(instructions[0],cpgen,variableTable);
+			operands[1] = getPushedNumber(instructions[1],cpgen,variableTable);
+			if (operands[0] == null || operands[1] == null){
+				continue;
+			}
 			Instruction opcode = instructions[2].getInstruction();
 			binOps opClass = binOps.valueOf(opcode.getClass().getSimpleName());
 			Instruction newInstruction = null;
 			switch (opClass){
 				case IADD:
 					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() + operands[1].intValue()));
+					/*
+					System.out.print(operands[0].intValue());
+					System.out.print(" + ");
+					System.out.print(operands[1].intValue());
+					System.out.print(" = ");
+					System.out.println(operands[0].intValue() + operands[1].intValue());*/
+					break;
+				case FADD:
+					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() + operands[1].floatValue()));
+					break;
+				case DADD:
+					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() + operands[1].doubleValue()));
+					break;
+				case LADD:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() + operands[1].longValue()));
+					break;
+				case ISUB:
+					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() - operands[1].intValue()));
+					break;
+				case FSUB:
+					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() - operands[1].floatValue()));
+					break;
+				case DSUB:
+					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() - operands[1].doubleValue()));
+					break;
+				case LSUB:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() - operands[1].longValue()));
+					break;
+				case IDIV:
+					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() / operands[1].intValue()));
+					break;
+				case FDIV:
+					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() / operands[1].floatValue()));
+					break;
+				case DDIV:
+					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() / operands[1].doubleValue()));
+					break;
+				case LDIV:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() / operands[1].longValue()));
+					break;
+				case IMUL:
+					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() * operands[1].intValue()));
+					break;
+				case FMUL:
+					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() * operands[1].floatValue()));
+					break;
+				case DMUL:
+					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() * operands[1].doubleValue()));
+					break;
+				case LMUL:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() * operands[1].longValue()));
 					break;
 			}
 			if (newInstruction != null){
@@ -122,6 +226,45 @@ public class ConstantFolder
 		return changed;
 	}
 
+	public ArrayList<Integer> localVarIndices(InstructionList il){
+		InstructionFinder itf = new InstructionFinder(il);
+		Iterator iter = itf.search("StoreInstruction");
+		ArrayList<Integer> indices = new ArrayList<>();
+		while (iter.hasNext()){
+			InstructionHandle[] instructions = (InstructionHandle[])iter.next();
+			StoreInstruction i = (StoreInstruction)instructions[0].getInstruction();
+			indices.add(i.getIndex());
+		}
+		return indices;
+	}
+
+
+	public void localVar(InstructionList il, MethodGen mg, ConstantPoolGen cpgen){
+		ArrayList<Integer> indices = localVarIndices(il);
+		/*for (Integer a : indices){
+			System.out.println(a);
+		}*/
+
+		LocalVariableGen[] lvg = mg.getLocalVariables();
+		for (LocalVariableGen l : lvg){
+			LocalVariable lv = l.getLocalVariable(cpgen);
+			System.out.println(lv.toString());
+		}
+	}
+
+	public void initVariableTable(InstructionList il,ConstantPoolGen cpgen,VariableTable variableTable){
+		ArrayList<Integer> indices = localVarIndices(il);
+		InstructionFinder itf = new InstructionFinder(il);
+		Iterator iter = itf.search("PushInstruction StoreInstruction");
+		while (iter.hasNext()) {
+			InstructionHandle[] instructionHandler = (InstructionHandle[])iter.next();
+			Number content = getPushedNumber(instructionHandler[0],cpgen,variableTable);
+			StoreInstruction store = (StoreInstruction) instructionHandler[1].getInstruction();
+			int storePos = store.getIndex();
+			variableTable.setVar(storePos,content);
+		}
+	}
+
 	public Method optimizeMethod(ClassGen cgen, Method me){
 		ConstantPoolGen cpgen = cgen.getConstantPool();
 		MethodGen mg = new MethodGen(me, cgen.getClassName(), cpgen);
@@ -130,10 +273,14 @@ public class ConstantFolder
 		InstructionList il = mg.getInstructionList();
 		System.out.println("Instructions before: ");
 		System.out.println(il.toString());
+		VariableTable variableTable = new VariableTable();
 		boolean changed = true;
 		while (changed){
+			//Fixed point
+			initVariableTable(il,cpgen,variableTable);
 			changed = false;
-			if (binaryOpFold(il,cpgen)){
+			System.out.println("Folding binary operation:");
+			if (binaryOpFold(il,cpgen,variableTable)){
 				changed = true;
 			}
 		}
@@ -157,10 +304,10 @@ public class ConstantFolder
 		ClassGen cgen = new ClassGen(original);
 		System.out.printf("*******%s*********\n",cgen.getClassName());
 		ConstantPoolGen cpgen = cgen.getConstantPool();
-		displayInfo("Integer Constant Pool before:",0);
+		displayInfo("Number Constant Pool before:",0);
 		displayPool(cgen,cpgen);
 		optimization(cgen);
-		displayInfo("Integer Constant Pool after:",0);
+		displayInfo("Number Constant Pool after:",0);
 		displayPool(cgen,cpgen);
 		gen.setConstantPool(cpgen);
 		this.optimized = gen.getJavaClass();
