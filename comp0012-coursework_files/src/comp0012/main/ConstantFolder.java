@@ -184,7 +184,7 @@ public class ConstantFolder
 		//Search through InstructionList for pattern: load load followed by an arithmetic instruction
 		//Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
 		Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
-		while (iter.hasNext()){
+		if (iter.hasNext()){
 			//Iterator return InstructionHandle
 			InstructionHandle[] instructions = (InstructionHandle[])iter.next();
 			displayInfo("Old instruction segment:",2);
@@ -194,10 +194,8 @@ public class ConstantFolder
 			Number[] operands = new Number[2];
 			operands[0] = getPushedValue(instructions[0],cpgen,variableTable);
 			operands[1] = getPushedValue(instructions[1],cpgen,variableTable);
-			if (operands[0] == null || operands[1] == null){
-				continue;
-			}
-			Instruction opcode = instructions[2].getInstruction();
+			if (!(operands[0] == null || operands[1] == null)){
+				Instruction opcode = instructions[2].getInstruction();
 			binOps opClass = binOps.valueOf(opcode.getClass().getSimpleName());
 			Instruction newInstruction = null;
 			switch (opClass){
@@ -269,6 +267,8 @@ public class ConstantFolder
 			}else{
 				displayInfo("Null newInstruction",2);
 			}
+			}
+			
 		}
 		displayInfo("\n",0);
 		return changed;
