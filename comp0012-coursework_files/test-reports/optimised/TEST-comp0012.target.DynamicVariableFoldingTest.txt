@@ -1,5 +1,5 @@
 Testsuite: comp0012.target.DynamicVariableFoldingTest
-Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 0.018 sec
+Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 0.019 sec
 
 Testcase: testMethodThree took 0.001 sec
 	Caused an ERROR
@@ -16,9 +16,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -36,9 +36,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -64,9 +64,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -84,9 +84,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -112,9 +112,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -132,9 +132,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -160,9 +160,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -180,9 +180,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -208,9 +208,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)
@@ -228,9 +228,9 @@ Exception Details:
     stack: { }
   Bytecode:
     0000000: 1205 3c12 363d b200 0312 3787 1400 076b
-    0000010: b600 0903 3e1d 100a a200 14b2 0003 1c1b
-    0000020: 641d 68b6 000a 8403 01a7 ffec 073c 1238
-    0000030: 3d12 39ac                              
+    0000010: b600 0903 3e1d 100a a200 11b2 0003 1239
+    0000020: b600 0a84 0301 a7ff ef07 3c12 3a3d 123b
+    0000030: ac                                     
   Stackmap Table:
     append_frame(@26,Integer,Integer,Integer)
     chop_frame(@49,1)

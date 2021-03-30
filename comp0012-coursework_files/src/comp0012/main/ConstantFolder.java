@@ -75,10 +75,8 @@ public class ConstantFolder
 		public Object getConstantValue(int line){
 			int retLine = -1;
 			for (int key : variableMap.keySet()){
-				if (key < line){
+				if (key < line && key > retLine){
 					retLine = key;
-				}else {
-					break;
 				}
 			}
 			return variableMap.get(retLine);
