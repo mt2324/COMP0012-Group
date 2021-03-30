@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="2c4424b5-5721-4cd0-976e-9a20aab5f31f" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/comp0012/main/ConstantFolder.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/comp0012/main/ConstantFolder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/comp0012/main/ConstantFolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/comp0012/main/ConstantFolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-reports/original/TEST-comp0012.target.ConstantVariableFoldingTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test-reports/original/TEST-comp0012.target.ConstantVariableFoldingTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-reports/original/TEST-comp0012.target.DynamicVariableFoldingTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test-reports/original/TEST-comp0012.target.DynamicVariableFoldingTest.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

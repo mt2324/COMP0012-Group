@@ -24,7 +24,7 @@ import org.apache.bcel.util.InstructionFinder;
 public class ConstantFolder
 {
 	public static class VariableTable{
-		private HashMap<Integer, Number> variableMap;
+		private HashMap<Integer, Variable> variableMap;
 		public VariableTable(){
 			variableMap = new HashMap<>();
 		}
@@ -33,20 +33,61 @@ public class ConstantFolder
 			return variableMap.containsKey(storePos);
 		}
 
-		public void setVar(int storePos, Number value){
-			variableMap.put(storePos,value);
+		public void setVar(int line,int storePos, Object value){
+			//variableMap.put(storePos,value);
+			if (variableMap.containsKey(storePos)){
+				//Already has an entry of Variable
+				variableMap.get(storePos).addLifeTime(line,value);
+			}else {
+				Variable var = new Variable(line,value);
+				variableMap.put(storePos, var);
+			}
 		}
 
-		public Number getValue(int storePos){
-			return variableMap.get(storePos);
+		public Object getValue(int storePos,int line){
+			if (variableMap.containsKey(storePos)) {
+				return variableMap.get(storePos).getConstantValue(line);
+			}
+			return null;
 		}
 
+		public void printVal(){
+			for (int k : variableMap.keySet()){
+				System.out.println("StorePos: " + k);
+				variableMap.get(k).printVariable();
+			}
+		}
 
 	}
 
-	public static class Variables{
-		public Variables(){
+	public static class Variable{
+		private HashMap<Integer, Object> variableMap;
+		public Variable(int line, Object value){
+			//Map line to value
+			variableMap = new HashMap<>();
+			variableMap.put(line,value);
+		}
 
+		public void addLifeTime(int line, Object value){
+			variableMap.put(line,value);
+		}
+
+		public Object getConstantValue(int line){
+			int retLine = -1;
+			for (int key : variableMap.keySet()){
+				if (key < line){
+					retLine = key;
+				}else {
+					break;
+				}
+			}
+			return variableMap.get(retLine);
+		}
+
+		public void printVariable(){
+			for (int k : variableMap.keySet()){
+				System.out.println("	Line: " + k + "  Value: " + variableMap.get(k));
+			}
 		}
 	}
 
@@ -56,6 +97,12 @@ public class ConstantFolder
 
 	JavaClass original = null;
 	JavaClass optimized = null;
+
+	String debuggingClass = "comp0012.target.myTest";
+	//String debuggingClass = "comp0012.target.ConstantVariableFolding";
+	String currentClass = "";
+
+	boolean display = true;
 
 	public ConstantFolder(String classFilePath)
 	{
@@ -93,17 +140,20 @@ public class ConstantFolder
 	}
 
 	public void displayPool(ClassGen cgen, ConstantPoolGen cpgen){
-
-		//System.out.println(cpgen);
-		getNumberConstant(cpgen);
-		//printInstructions(cgen,cpgen);
+		if (currentClass.equals(debuggingClass) && display) {
+			//System.out.println(cpgen);
+			getNumberConstant(cpgen);
+			//printInstructions(cgen,cpgen);
+		}
 	}
 
 	public void displayInfo(String Content,int indent){
-		System.out.println((new String(new char[indent]).replace("\0", " ")) + Content);
+		if (currentClass.equals(debuggingClass) && display) {
+			System.out.println((new String(new char[indent]).replace("\0", " ")) + Content);
+		}
 	}
 
-	public Number getPushedNumber(InstructionHandle instructionHandler,ConstantPoolGen cpgen, VariableTable variableTable){
+	public Number getPushedValue(InstructionHandle instructionHandler,ConstantPoolGen cpgen, VariableTable variableTable){
 		//Gets the value that is being pushed from constant pool
 		Object value = null;
 		Instruction instruction = instructionHandler.getInstruction();
@@ -116,7 +166,7 @@ public class ConstantFolder
 		}else if (instruction instanceof LoadInstruction){
 			LoadInstruction loadInstruction = (LoadInstruction) instruction;
 			//Get value of local variable stored at the index referenced by Loadinstruction
-			value = variableTable.getValue(loadInstruction.getIndex());
+			value = variableTable.getValue(loadInstruction.getIndex(),instructionHandler.getPosition());
 		}else if (instruction instanceof ConstantPushInstruction){
 			ConstantPushInstruction loadInstruction = (ConstantPushInstruction) instruction;
 			value = loadInstruction.getValue();
@@ -144,8 +194,8 @@ public class ConstantFolder
 				displayInfo(a.getInstruction().toString(),4);
 			}
 			Number[] operands = new Number[2];
-			operands[0] = getPushedNumber(instructions[0],cpgen,variableTable);
-			operands[1] = getPushedNumber(instructions[1],cpgen,variableTable);
+			operands[0] = getPushedValue(instructions[0],cpgen,variableTable);
+			operands[1] = getPushedValue(instructions[1],cpgen,variableTable);
 			if (operands[0] == null || operands[1] == null){
 				continue;
 			}
@@ -222,7 +272,7 @@ public class ConstantFolder
 				displayInfo("Null newInstruction",2);
 			}
 		}
-		System.out.println();
+		displayInfo("\n",0);
 		return changed;
 	}
 
@@ -238,55 +288,50 @@ public class ConstantFolder
 		return indices;
 	}
 
-
-	public void localVar(InstructionList il, MethodGen mg, ConstantPoolGen cpgen){
-		ArrayList<Integer> indices = localVarIndices(il);
-		/*for (Integer a : indices){
-			System.out.println(a);
-		}*/
-
-		LocalVariableGen[] lvg = mg.getLocalVariables();
-		for (LocalVariableGen l : lvg){
-			LocalVariable lv = l.getLocalVariable(cpgen);
-			System.out.println(lv.toString());
-		}
-	}
-
 	public void initVariableTable(InstructionList il,ConstantPoolGen cpgen,VariableTable variableTable){
 		ArrayList<Integer> indices = localVarIndices(il);
 		InstructionFinder itf = new InstructionFinder(il);
 		Iterator iter = itf.search("PushInstruction StoreInstruction");
 		while (iter.hasNext()) {
 			InstructionHandle[] instructionHandler = (InstructionHandle[])iter.next();
-			Number content = getPushedNumber(instructionHandler[0],cpgen,variableTable);
+			Object content = getPushedValue(instructionHandler[0],cpgen,variableTable);
+			if (content == null){
+				continue;
+			}
 			StoreInstruction store = (StoreInstruction) instructionHandler[1].getInstruction();
 			int storePos = store.getIndex();
-			variableTable.setVar(storePos,content);
+			variableTable.setVar(instructionHandler[1].getPosition(),storePos,content);
+		}
+
+		if (currentClass.equals(debuggingClass) && display) {
+			System.out.println("Local Variables: ");
+			variableTable.printVal();
+			System.out.println();
 		}
 	}
 
 	public Method optimizeMethod(ClassGen cgen, Method me){
 		ConstantPoolGen cpgen = cgen.getConstantPool();
 		MethodGen mg = new MethodGen(me, cgen.getClassName(), cpgen);
-		System.out.println("\nDebugging method " + mg.getName());
+		displayInfo("\nDebugging method " + mg.getName(),0);
 		mg.removeNOPs();
 		InstructionList il = mg.getInstructionList();
-		System.out.println("Instructions before: ");
-		System.out.println(il.toString());
-		VariableTable variableTable = new VariableTable();
+		displayInfo("Instructions before: ",0);
+		displayInfo(il.toString(),0);
 		boolean changed = true;
 		while (changed){
 			//Fixed point
+			VariableTable variableTable = new VariableTable();
 			initVariableTable(il,cpgen,variableTable);
 			changed = false;
-			System.out.println("Folding binary operation:");
+			displayInfo("Folding binary operation:",0);
 			if (binaryOpFold(il,cpgen,variableTable)){
 				changed = true;
 			}
 		}
 
-		System.out.println("\nInstructions after");
-		System.out.println(il.toString());
+		displayInfo("\nInstructions after",0);
+		displayInfo(il.toString(),0);
 		return mg.getMethod();
 	}
 
@@ -302,7 +347,10 @@ public class ConstantFolder
 	public void optimize()
 	{
 		ClassGen cgen = new ClassGen(original);
-		System.out.printf("*******%s*********\n",cgen.getClassName());
+		currentClass = cgen.getClassName();
+		if (currentClass.equals(debuggingClass)) {
+			System.out.printf("*******%s*********\n", currentClass);
+		}
 		ConstantPoolGen cpgen = cgen.getConstantPool();
 		displayInfo("Number Constant Pool before:",0);
 		displayPool(cgen,cpgen);
