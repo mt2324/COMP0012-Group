@@ -100,7 +100,7 @@ public class ConstantFolder
 	//String debuggingClass = "comp0012.target.ConstantVariableFolding";
 	String currentClass = "";
 
-	boolean display = true;
+	boolean display = false;
 
 	public ConstantFolder(String classFilePath)
 	{

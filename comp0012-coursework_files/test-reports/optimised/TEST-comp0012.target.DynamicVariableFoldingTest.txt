@@ -193,7 +193,7 @@ Exception Details:
 	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
 
-Testcase: testMethodTwoOut took 0.001 sec
+Testcase: testMethodTwoOut took 0 sec
 	Caused an ERROR
 StackMapTable error: bad offset
 Exception Details:
