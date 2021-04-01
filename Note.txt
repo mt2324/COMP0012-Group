@@ -1,0 +1,8 @@
+Works without LoadInstruction branch within getPushedValue method
+
+
+Error:
+- Setting (b - a) * i to constant where i is an incrementer
+
+Fix:
+-If contain incrementer within variable table, remove.

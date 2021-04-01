@@ -58,6 +58,13 @@ public class ConstantFolder
 			}
 		}
 
+		public void removeEntry(int line, int storePos){
+			if (variableMap.containsKey(storePos)) {
+				//variableMap.get(storePos).removeLine(line);
+				variableMap.remove(storePos);
+			}
+		}
+
 	}
 
 	public static class Variable{
@@ -82,6 +89,10 @@ public class ConstantFolder
 			return variableMap.get(retLine);
 		}
 
+		public void removeLine(int line){
+			variableMap.remove(line);
+		}
+
 		public void printVariable(){
 			for (int k : variableMap.keySet()){
 				System.out.println("	Line: " + k + "  Value: " + variableMap.get(k));
@@ -96,10 +107,11 @@ public class ConstantFolder
 	JavaClass original = null;
 	JavaClass optimized = null;
 
-	String debuggingClass = "comp0012.target.myTest";
+	//String debuggingClass = "comp0012.target.myTest";
 	//String debuggingClass = "comp0012.target.ConstantVariableFolding";
+	String debuggingClass = "comp0012.target.DynamicVariableFolding";
 	String currentClass = "";
-
+	boolean displayeAll = false;
 	boolean display = true;
 
 	public ConstantFolder(String classFilePath)
@@ -146,7 +158,7 @@ public class ConstantFolder
 	}
 
 	public void displayInfo(String Content,int indent){
-		if (currentClass.equals(debuggingClass) && display) {
+		if ((currentClass.equals(debuggingClass) || displayeAll) && display) {
 			System.out.println((new String(new char[indent]).replace("\0", " ")) + Content);
 		}
 	}
@@ -260,12 +272,10 @@ public class ConstantFolder
 				displayInfo(newInstruction.toString(),4);
 				instructions[0].setInstruction(newInstruction);
 				try {
-					il.delete(instructions[1]);
-					il.delete(instructions[2]);
+					il.delete(instructions[1],instructions[2]);
 				}catch (TargetLostException e){
 				}
-			}else{
-				displayInfo("Null newInstruction",2);
+				il.update();
 			}
 			}
 			
@@ -300,11 +310,25 @@ public class ConstantFolder
 			int storePos = store.getIndex();
 			variableTable.setVar(instructionHandler[1].getPosition(),storePos,content);
 		}
-
-		if (currentClass.equals(debuggingClass) && display) {
+		removeIncrementer(il,variableTable);
+		if ((currentClass.equals(debuggingClass) || displayeAll) && display) {
 			System.out.println("Local Variables: ");
 			variableTable.printVal();
 			System.out.println();
+		}
+	}
+
+	public void removeIncrementer(InstructionList il,VariableTable variableTable){
+		InstructionFinder itf = new InstructionFinder(il);
+		Iterator iter = itf.search("IINC");
+		while (iter.hasNext()){
+			InstructionHandle[] instructionHandler = (InstructionHandle[])iter.next();
+			IndexedInstruction inc = (IndexedInstruction) instructionHandler[0].getInstruction();
+			System.out.print("Incrementer StorePos: ");
+			System.out.print(inc.getIndex());
+			System.out.print("	Line: ");
+			System.out.println(instructionHandler[0].getPosition());
+			variableTable.removeEntry(instructionHandler[0].getPosition(),inc.getIndex());
 		}
 	}
 
@@ -317,7 +341,11 @@ public class ConstantFolder
 		displayInfo("Instructions before: ",0);
 		displayInfo(il.toString(),0);
 		boolean changed = true;
-		while (changed){
+
+		//Experiment
+		int count = 1;
+		//while (changed){
+		while (count > 0){
 			//Fixed point
 			VariableTable variableTable = new VariableTable();
 			initVariableTable(il,cpgen,variableTable);
@@ -326,6 +354,8 @@ public class ConstantFolder
 			if (binaryOpFold(il,cpgen,variableTable)){
 				changed = true;
 			}
+
+			count--;
 		}
 
 		displayInfo("\nInstructions after",0);
@@ -333,29 +363,37 @@ public class ConstantFolder
 		return mg.getMethod();
 	}
 
-	public void optimization(ClassGen cgen){
+	public Method[] optimization(ClassGen cgen){
 		Method[] methods = cgen.getMethods();
 		Method[] optimised = new Method[methods.length];
 		for (int i = 0; i< methods.length; i++){
 			optimised[i] = optimizeMethod(cgen,methods[i]);
 		}
-		gen.setMethods(optimised);
+		return optimised;
+		
 	}
 
 	public void optimize()
 	{
 		ClassGen cgen = new ClassGen(original);
 		currentClass = cgen.getClassName();
-		if (currentClass.equals(debuggingClass)) {
+		if (currentClass.equals(debuggingClass) || displayeAll) {
 			System.out.printf("*******%s*********\n", currentClass);
 		}
 		ConstantPoolGen cpgen = cgen.getConstantPool();
 		displayInfo("Number Constant Pool before:",0);
 		displayPool(cgen,cpgen);
-		optimization(cgen);
+		gen.setMethods(optimization(cgen));
 		displayInfo("Number Constant Pool after:",0);
 		displayPool(cgen,cpgen);
 		gen.setConstantPool(cpgen);
+		//gen.setMajor(50);
+		gen.setMajor(50);
+		gen.setMinor(0);
+		System.out.print("Major: ");
+		System.out.print(gen.getMajor());
+		System.out.print("	Minor: ");
+		System.out.println(gen.getMinor());
 		this.optimized = gen.getJavaClass();
 	}
 

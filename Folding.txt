@@ -1,0 +1,62 @@
+     [java] Incrementer StorePos: 3     Line: 43
+     [java] Local Variables:
+     [java] StorePos: 1
+     [java]     Line: 2  Value: 534245
+     [java]     Line: 50  Value: 4
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_1[27](1)
+     [java]     sipush[17](3) 1234
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 35
+     [java]
+     [java]
+     [java] Incrementer StorePos: 3     Line: 43
+     [java] Local Variables:
+     [java] StorePos: 1
+     [java]     Line: 2  Value: 534245
+     [java]     Line: 50  Value: 4
+     [java] StorePos: 2
+     [java]     Line: 8  Value: 533011
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 4
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 36
+     [java]
+     [java]
+     [java] Incrementer StorePos: 3     Line: 43
+     [java] Local Variables:
+     [java] StorePos: 1
+     [java]     Line: 2  Value: 534245
+     [java]     Line: 50  Value: 4
+     [java] StorePos: 2
+     [java]     Line: 8  Value: 533011
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     iload_2[28](1)
+     [java]     iload_1[27](1)
+     [java]     isub[100](1)
+     [java]   New instruction segment:
+     [java]     ldc[18](2) 37
+     [java]
+     [java]
+     [java] Incrementer StorePos: 3     Line: 43
+     [java] Local Variables:
+     [java] StorePos: 1
+     [java]     Line: 2  Value: 534245
+     [java]     Line: 50  Value: 4
+     [java] StorePos: 2
+     [java]     Line: 8  Value: 533011
+     [java]
+     [java] Folding binary operation:
+     [java]   Old instruction segment:
+     [java]     ldc[18](2) 37
+     [java]     iload_3[29](1)
+     [java]     imul[104](1)
