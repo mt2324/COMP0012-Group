@@ -207,6 +207,24 @@ public class ConstantFolder
 				case LMUL:
 					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() * operands[1].longValue()));
 					break;
+				case IAND:
+					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() && operands[1].intValue()))
+					break;
+				case LAND:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() && operands[1].longValue()))
+					break;
+				case IOR:
+					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() | operands[1].intValue()))
+					break;
+				case LOR:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() | operands[1].longValue()))
+					break;
+				case IXOR:
+					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() ^ operands[1].intValue()))
+					break;
+				case LXOR:
+					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() ^ operands[1].longValue()))
+					break;
 			}
 			if (newInstruction != null){
 				changed = true;
