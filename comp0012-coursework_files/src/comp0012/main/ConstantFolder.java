@@ -98,7 +98,7 @@ public class ConstantFolder
 	JavaClass original = null;
 	JavaClass optimized = null;
 
-	String debuggingClass = "comp0012.target.myTest";
+	String debuggingClass = "comp0012.target.BooleanOperators";
 	//String debuggingClass = "comp0012.target.ConstantVariableFolding";
 	String currentClass = "";
 
@@ -176,7 +176,7 @@ public class ConstantFolder
 
 	enum binOps{
 		//Enum for binary operations, used to achieve switch case
-		IADD,FADD,DADD,LADD,ISUB,FSUB,DSUB,LSUB,IDIV,FDIV,DDIV,LDIV,IMUL,FMUL,DMUL,LMUL;
+		IADD,FADD,DADD,LADD,ISUB,FSUB,DSUB,LSUB,IDIV,FDIV,DDIV,LDIV,IMUL,FMUL,DMUL,LMUL,IXOR,LXOR,IAND,LAND,LOR,IOR,LCMP,DCMPG,DCMPL,FCMPG,FCMPL;
 	}
 
 	public boolean binaryOpFold(InstructionList il, ConstantPoolGen cpgen,VariableTable variableTable){
@@ -185,7 +185,7 @@ public class ConstantFolder
 		InstructionFinder itf = new InstructionFinder(il);
 		//Search through InstructionList for pattern: load load followed by an arithmetic instruction
 		//Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
-		Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
+		Iterator iter = itf.search("PushInstruction PushInstruction ( ArithmeticInstruction | LCMP | DCMPL | DCMPG | FCMPL | FCMPG )");
 		while (iter.hasNext()){
 			//Iterator return InstructionHandle
 			InstructionHandle[] instructions = (InstructionHandle[])iter.next();
@@ -258,22 +258,104 @@ public class ConstantFolder
 					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() * operands[1].longValue()));
 					break;
 				case IAND:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() && operands[1].intValue()))
+					if(operands[0].intValue() == 1 && operands[1].intValue() == 1){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
+					
 					break;
 				case LAND:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() && operands[1].longValue()))
+					if(operands[0].longValue() == 1 && operands[1].longValue() == 1){
+						newInstruction = new LDC2_W(cpgen.addLong(1));
+					}
+					else{
+						newInstruction = new LDC2_W(cpgen.addLong(0));
+					}
 					break;
+
 				case IOR:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() | operands[1].intValue()))
+					if(operands[0].intValue() == 1 | operands[1].intValue() == 1){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
 					break;
+
 				case LOR:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() | operands[1].longValue()))
+					if(operands[0].longValue() == 1 | operands[1].longValue() == 1){
+						newInstruction = new LDC2_W(cpgen.addLong(1));
+					}
+					else{
+						newInstruction = new LDC2_W(cpgen.addLong(0));
+					}
 					break;
+				
 				case IXOR:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() ^ operands[1].intValue()))
+					if((operands[0].intValue() == 1 | operands[1].intValue() == 1) && !(operands[0].intValue() == 1 && operands[1].intValue() == 1)){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
 					break;
+
 				case LXOR:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() ^ operands[1].longValue()))
+					if((operands[0].longValue() == 1 | operands[1].longValue() == 1) && !(operands[0].longValue() == 1 && operands[1].longValue() == 1)){
+						newInstruction = new LDC2_W(cpgen.addLong(1));
+					}
+					else{
+						newInstruction = new LDC2_W(cpgen.addLong(0));
+					}
+					break;
+
+				case DCMPG:
+					if(operands[0].doubleValue() > operands[1].doubleValue()){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
+					break;
+
+				case DCMPL:
+					if(operands[0].doubleValue() < operands[1].doubleValue()){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
+					break;
+				
+				case FCMPG:
+					if(operands[0].floatValue() > operands[1].floatValue()){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
+					break;
+
+				case FCMPL:
+					if(operands[0].floatValue() < operands[1].floatValue()){
+						newInstruction = new LDC(cpgen.addInteger(1));
+					}
+					else{
+						newInstruction = new LDC(cpgen.addInteger(0));
+					}
+					break;
+				case LCMP:
+					if(operands[0].longValue() > operands[1].longValue()){
+						newInstruction = new LDC2_W(cpgen.addLong(1));
+					}
+					else if (operands[0].longValue() == operands[1].longValue()){
+						newInstruction = new LDC2_W(cpgen.addLong(0));
+					}
+					else{
+						newInstruction = new LDC2_W(cpgen.addLong(-1));
+					}
 					break;
 			}
 			if (newInstruction != null){
