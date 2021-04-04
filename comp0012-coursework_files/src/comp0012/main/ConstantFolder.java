@@ -184,7 +184,7 @@ public class ConstantFolder
 		//Search through InstructionList for pattern: load load followed by an arithmetic instruction
 		//Iterator iter = itf.search("PushInstruction PushInstruction ArithmeticInstruction");
 		Iterator iter = itf.search("PushInstruction PushInstruction ( ArithmeticInstruction | LCMP | DCMPL | DCMPG | FCMPL | FCMPG )");
-		while (iter.hasNext()){
+		if (iter.hasNext()){
 			//Iterator return InstructionHandle
 			InstructionHandle[] instructions = (InstructionHandle[])iter.next();
 			displayInfo("Old instruction segment:",2);
@@ -194,181 +194,129 @@ public class ConstantFolder
 			Number[] operands = new Number[2];
 			operands[0] = getPushedValue(instructions[0],cpgen,variableTable);
 			operands[1] = getPushedValue(instructions[1],cpgen,variableTable);
-			if (operands[0] == null || operands[1] == null){
-				continue;
-			}
-			Instruction opcode = instructions[2].getInstruction();
-			binOps opClass = binOps.valueOf(opcode.getClass().getSimpleName());
-			Instruction newInstruction = null;
-			switch (opClass){
-				case IADD:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() + operands[1].intValue()));
-					/*
-					System.out.print(operands[0].intValue());
-					System.out.print(" + ");
-					System.out.print(operands[1].intValue());
-					System.out.print(" = ");
-					System.out.println(operands[0].intValue() + operands[1].intValue());*/
-					break;
-				case FADD:
-					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() + operands[1].floatValue()));
-					break;
-				case DADD:
-					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() + operands[1].doubleValue()));
-					break;
-				case LADD:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() + operands[1].longValue()));
-					break;
-				case ISUB:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() - operands[1].intValue()));
-					break;
-				case FSUB:
-					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() - operands[1].floatValue()));
-					break;
-				case DSUB:
-					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() - operands[1].doubleValue()));
-					break;
-				case LSUB:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() - operands[1].longValue()));
-					break;
-				case IDIV:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() / operands[1].intValue()));
-					break;
-				case FDIV:
-					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() / operands[1].floatValue()));
-					break;
-				case DDIV:
-					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() / operands[1].doubleValue()));
-					break;
-				case LDIV:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() / operands[1].longValue()));
-					break;
-				case IMUL:
-					newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() * operands[1].intValue()));
-					break;
-				case FMUL:
-					newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() * operands[1].floatValue()));
-					break;
-				case DMUL:
-					newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() * operands[1].doubleValue()));
-					break;
-				case LMUL:
-					newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() * operands[1].longValue()));
-					break;
-				case IAND:
-					if(operands[0].intValue() == 1 && operands[1].intValue() == 1){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
+			if (!(operands[0] == null || operands[1] == null)){
+				Instruction opcode = instructions[2].getInstruction();
+				binOps opClass = binOps.valueOf(opcode.getClass().getSimpleName());
+				Instruction newInstruction = null;
+				switch (opClass){
+					case IADD:
+						newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() + operands[1].intValue()));
+						/*
+						System.out.print(operands[0].intValue());
+						System.out.print(" + ");
+						System.out.print(operands[1].intValue());
+						System.out.print(" = ");
+						System.out.println(operands[0].intValue() + operands[1].intValue());*/
+						break;
+					case FADD:
+						newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() + operands[1].floatValue()));
+						break;
+					case DADD:
+						newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() + operands[1].doubleValue()));
+						break;
+					case LADD:
+						newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() + operands[1].longValue()));
+						break;
+					case ISUB:
+						newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() - operands[1].intValue()));
+						break;
+					case FSUB:
+						newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() - operands[1].floatValue()));
+						break;
+					case DSUB:
+						newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() - operands[1].doubleValue()));
+						break;
+					case LSUB:
+						newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() - operands[1].longValue()));
+						break;
+					case IDIV:
+						newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() / operands[1].intValue()));
+						break;
+					case FDIV:
+						newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() / operands[1].floatValue()));
+						break;
+					case DDIV:
+						newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() / operands[1].doubleValue()));
+						break;
+					case LDIV:
+						newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() / operands[1].longValue()));
+						break;
+					case IMUL:
+						newInstruction = new LDC(cpgen.addInteger(operands[0].intValue() * operands[1].intValue()));
+						break;
+					case FMUL:
+						newInstruction = new LDC(cpgen.addFloat(operands[0].floatValue() * operands[1].floatValue()));
+						break;
+					case DMUL:
+						newInstruction = new LDC2_W(cpgen.addDouble(operands[0].doubleValue() * operands[1].doubleValue()));
+						break;
+					case LMUL:
+						newInstruction = new LDC2_W(cpgen.addLong(operands[0].longValue() * operands[1].longValue()));
+						break;
+
+					case DCMPG:
+						if(operands[0].doubleValue() > operands[1].doubleValue()){
+							newInstruction = new ICONST(1);
+						}
+						else{
+							newInstruction = new ICONST(0);
+						}
+						break;
+
+					case DCMPL:
+						if(operands[0].doubleValue() < operands[1].doubleValue()){
+							newInstruction = new ICONST(1);
+						}
+						else{
+							newInstruction = new ICONST(0);
+						}
+						break;
 					
-					break;
-				case LAND:
-					if(operands[0].longValue() == 1 && operands[1].longValue() == 1){
-						newInstruction = new LDC2_W(cpgen.addLong(1));
-					}
-					else{
-						newInstruction = new LDC2_W(cpgen.addLong(0));
-					}
-					break;
+					case FCMPG:
+						if(operands[0].floatValue() > operands[1].floatValue()){
+							newInstruction = new ICONST(1);
+						}
+						else{
+							newInstruction = new ICONST(0);
+						}
+						break;
 
-				case IOR:
-					if(operands[0].intValue() == 1 | operands[1].intValue() == 1){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
-					break;
+					case FCMPL:
+						if(operands[0].floatValue() < operands[1].floatValue()){
+							newInstruction = new ICONST(1);
+						}
+						else{
+							newInstruction = new ICONST(0);
+						}
+						break;
+					case LCMP:
+						if(operands[0].longValue() > operands[1].longValue()){
+							newInstruction = new ICONST(1);
+						}
+						else if (operands[0].longValue() == operands[1].longValue()){
+							newInstruction = new ICONST(0);
+						}
+						else{
+							newInstruction = new ICONST(-1);
+						}
+						break;
 
-				case LOR:
-					if(operands[0].longValue() == 1 | operands[1].longValue() == 1){
-						newInstruction = new LDC2_W(cpgen.addLong(1));
-					}
-					else{
-						newInstruction = new LDC2_W(cpgen.addLong(0));
-					}
-					break;
-				
-				case IXOR:
-					if((operands[0].intValue() == 1 | operands[1].intValue() == 1) && !(operands[0].intValue() == 1 && operands[1].intValue() == 1)){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
-					break;
-
-				case LXOR:
-					if((operands[0].longValue() == 1 | operands[1].longValue() == 1) && !(operands[0].longValue() == 1 && operands[1].longValue() == 1)){
-						newInstruction = new LDC2_W(cpgen.addLong(1));
-					}
-					else{
-						newInstruction = new LDC2_W(cpgen.addLong(0));
-					}
-					break;
-
-				case DCMPG:
-					if(operands[0].doubleValue() > operands[1].doubleValue()){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
-					break;
-
-				case DCMPL:
-					if(operands[0].doubleValue() < operands[1].doubleValue()){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
-					break;
-				
-				case FCMPG:
-					if(operands[0].floatValue() > operands[1].floatValue()){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
-					break;
-
-				case FCMPL:
-					if(operands[0].floatValue() < operands[1].floatValue()){
-						newInstruction = new LDC(cpgen.addInteger(1));
-					}
-					else{
-						newInstruction = new LDC(cpgen.addInteger(0));
-					}
-					break;
-				case LCMP:
-					if(operands[0].longValue() > operands[1].longValue()){
-						newInstruction = new LDC2_W(cpgen.addLong(1));
-					}
-					else if (operands[0].longValue() == operands[1].longValue()){
-						newInstruction = new LDC2_W(cpgen.addLong(0));
-					}
-					else{
-						newInstruction = new LDC2_W(cpgen.addLong(-1));
-					}
-					break;
-			}
-			if (newInstruction != null){
-				changed = true;
-				displayInfo("New instruction segment:",2);
-				displayInfo(newInstruction.toString(),4);
-				instructions[0].setInstruction(newInstruction);
-				try {
-					il.delete(instructions[1]);
-					il.delete(instructions[2]);
-				}catch (TargetLostException e){
 				}
-			}else{
-				displayInfo("Null newInstruction",2);
+				if (newInstruction != null){
+					changed = true;
+					displayInfo("New instruction segment:",2);
+					displayInfo(newInstruction.toString(),4);
+					instructions[0].setInstruction(newInstruction);
+					try {
+						il.delete(instructions[1]);
+						il.delete(instructions[2]);
+					}catch (TargetLostException e){
+					}
+				}else{
+					displayInfo("Null newInstruction",2);
+				}
 			}
+			
 		}
 		displayInfo("\n",0);
 		return changed;
@@ -456,6 +404,8 @@ public class ConstantFolder
 		displayInfo("Number Constant Pool after:",0);
 		displayPool(cgen,cpgen);
 		gen.setConstantPool(cpgen);
+		gen.setMajor(50);
+		gen.setMinor(0);
 		this.optimized = gen.getJavaClass();
 	}
 
