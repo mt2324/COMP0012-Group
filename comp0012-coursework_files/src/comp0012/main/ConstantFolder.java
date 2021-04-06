@@ -25,8 +25,10 @@ public class ConstantFolder
 {
 	public static class VariableTable{
 		private HashMap<Integer, Variable> variableMap;
+		private ArrayList<Integer> iteratorPos;
 		public VariableTable(){
 			variableMap = new HashMap<>();
+			iteratorPos = new ArrayList<>();
 		}
 
 		public boolean hasPos(int storePos){
@@ -58,6 +60,21 @@ public class ConstantFolder
 			}
 		}
 
+		public void removeEntry(int line, int storePos){
+			if (variableMap.containsKey(storePos)) {
+				//variableMap.get(storePos).removeLine(line);
+				variableMap.remove(storePos);
+			}
+		}
+
+		public void addIterator(int storePos){
+			iteratorPos.add(storePos);
+		}
+
+		public boolean isIterator(int storePos){
+			return iteratorPos.contains(storePos);
+		}
+
 	}
 
 	public static class Variable{
@@ -82,6 +99,10 @@ public class ConstantFolder
 			return variableMap.get(retLine);
 		}
 
+		public void removeLine(int line){
+			variableMap.remove(line);
+		}
+
 		public void printVariable(){
 			for (int k : variableMap.keySet()){
 				System.out.println("	Line: " + k + "  Value: " + variableMap.get(k));
@@ -96,7 +117,7 @@ public class ConstantFolder
 	JavaClass original = null;
 	JavaClass optimized = null;
 
-	String debuggingClass = "comp0012.target.BooleanOperators";
+	String debuggingClass = "comp0012.target.myTest";
 	//String debuggingClass = "comp0012.target.ConstantVariableFolding";
 	String currentClass = "";
 
@@ -172,6 +193,18 @@ public class ConstantFolder
 		return (Number)value;
 	}
 
+	public boolean isIterator(InstructionHandle instructionHandler,VariableTable variableTable){
+		Instruction instruction = instructionHandler.getInstruction();
+		if (instruction instanceof LoadInstruction){
+			LoadInstruction loadInstruction = (LoadInstruction) instruction;
+			//Get value of local variable stored at the index referenced by Loadinstruction
+			if (variableTable.isIterator(loadInstruction.getIndex())){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	enum binOps{
 		//Enum for binary operations, used to achieve switch case
 		IADD,FADD,DADD,LADD,ISUB,FSUB,DSUB,LSUB,IDIV,FDIV,DDIV,LDIV,IMUL,FMUL,DMUL,LMUL,IXOR,LXOR,IAND,LAND,LOR,IOR,LCMP,DCMPG,DCMPL,FCMPG,FCMPL;
@@ -192,6 +225,10 @@ public class ConstantFolder
 				displayInfo(a.getInstruction().toString(),4);
 			}
 			Number[] operands = new Number[2];
+			
+			if (isIterator(instructions[0],variableTable) || isIterator(instructions[1],variableTable)){
+				return true;
+			}
 			operands[0] = getPushedValue(instructions[0],cpgen,variableTable);
 			operands[1] = getPushedValue(instructions[1],cpgen,variableTable);
 			if (!(operands[0] == null || operands[1] == null)){
@@ -348,11 +385,28 @@ public class ConstantFolder
 			int storePos = store.getIndex();
 			variableTable.setVar(instructionHandler[1].getPosition(),storePos,content);
 		}
-
+		removeIncrementer(il,variableTable);
 		if (currentClass.equals(debuggingClass) && display) {
 			System.out.println("Local Variables: ");
 			variableTable.printVal();
 			System.out.println();
+		}
+	}
+
+	public void removeIncrementer(InstructionList il,VariableTable variableTable){
+		InstructionFinder itf = new InstructionFinder(il);
+		Iterator iter = itf.search("IINC");
+		while (iter.hasNext()){
+			InstructionHandle[] instructionHandler = (InstructionHandle[])iter.next();
+			IndexedInstruction inc = (IndexedInstruction) instructionHandler[0].getInstruction();
+			/*if (currentClass.equals(debuggingClass) && display){
+				System.out.print("Incrementer StorePos: ");
+				System.out.print(inc.getIndex());
+				System.out.print("	Line: ");
+				System.out.println(instructionHandler[0].getPosition());
+			}*/
+			variableTable.removeEntry(instructionHandler[0].getPosition(),inc.getIndex());
+			variableTable.addIterator(inc.getIndex());
 		}
 	}
 
