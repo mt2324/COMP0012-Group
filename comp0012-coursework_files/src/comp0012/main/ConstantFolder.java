@@ -117,11 +117,11 @@ public class ConstantFolder
 	JavaClass original = null;
 	JavaClass optimized = null;
 
-	String debuggingClass = "comp0012.target.myTest";
+	String debuggingClass = "comp0012.target.IndexTest";
 	//String debuggingClass = "comp0012.target.ConstantVariableFolding";
 	String currentClass = "";
 
-	boolean display = true;
+	boolean display = false;
 
 	public ConstantFolder(String classFilePath)
 	{
@@ -328,9 +328,20 @@ public class ConstantFolder
 			}
 			Number[] operands = new Number[2];
 			
-			if (isIterator(instructions[0],variableTable) || isIterator(instructions[1],variableTable)){
-				
+			while (isIterator(instructions[0],variableTable) || isIterator(instructions[1],variableTable)){
+				if (iter.hasNext()){
+					instructions = (InstructionHandle[])iter.next();
+					displayInfo("Ignored instruction segment:",2);
+					for (InstructionHandle a : instructions){
+						displayInfo(a.getInstruction().toString(),4);
+
+					}
+				}
+				else{
+					return false;
+				}
 			}
+			
 			operands[0] = getPushedValue(instructions[0],cpgen,variableTable);
 			operands[1] = getPushedValue(instructions[1],cpgen,variableTable);
 			if (!(operands[0] == null || operands[1] == null)){
